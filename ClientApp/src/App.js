@@ -44,28 +44,32 @@ export default function App() {
                 <Box sx={{ height: '10px' }}></Box>
                 <Container sx={{ height: "100%" }} maxWidth="xxl">
                     <Grid container spacing={2} sx={{ height: '100%' }}>
-                        <Grid item container spacing={2} xs={12} md={8} sx={{ flexDirection: 'column' }}>
-                            <Grid item sx={{ flex: '7', padding:"10px" }}>
-                                <Paper className='contentPaper' sx={{ ...testingStyle, height: "100%" }} elevation={3}>
-                                    <QuickAccessComp></QuickAccessComp>
-                                </Paper>
-                            </Grid>
-                            <Grid item sx={{ flex: '3', padding: "10px" }}>
-                                <Paper className='contentPaper' sx={{ ...testingStyle, height: "100%" }} elevation={3}>
-                                    NewNotesComponent
-                                </Paper>
+                        <Grid item xs={12} md={8}>
+                            <Grid container spacing={2} direction='column' sx={{ height: '100%' }}>
+                                <Grid item sx={{ flex: '7', padding: "10px" }}>
+                                    <Paper className='contentPaper' sx={{ ...testingStyle, height: "100%" }} elevation={3}>
+                                        <QuickAccessComp></QuickAccessComp>
+                                    </Paper>
+                                </Grid>
+                                <Grid item sx={{ flex: '3', padding: "10px" }}>
+                                    <Paper className='contentPaper' sx={{ ...testingStyle, height: "100%" }} elevation={3}>
+                                        NewNotesComponent
+                                    </Paper>
+                                </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs container spacing={2} sx={{ display: "flex", flexDirection: "column" }}>
-                            <Grid item sx={{ flex: 1 }}>
-                                <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
-                                    Tasking area
-                                </Paper>
-                            </Grid>
-                            <Grid item sx={{height:'300px'}}>
-                                <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
-                                    Calendar View
-                                </Paper>
+                        <Grid item xs>
+                            <Grid container spacing={3} direction='column' sx={{height:'100%'}}>
+                                <Grid item sx={{flex:3}}>
+                                    <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
+                                        Tasking area
+                                    </Paper>
+                                </Grid>
+                                <Grid item sx={{ height: '300px' }}>
+                                    <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
+                                        Calendar View
+                                    </Paper>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
