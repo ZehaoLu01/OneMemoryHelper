@@ -4,10 +4,9 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
-
 import React from 'react';
 import './custom.css';
-import GoogleLogo from './images/Google_logo.png'
+import QuickAccessComp from './components/QuickAccessComp'
 import Nav from './components/Nav'
 import { Style } from "../../node_modules/@material-ui/icons/index";
 
@@ -48,7 +47,7 @@ export default function App() {
                         <Grid item container spacing={2} xs={12} md={8} sx={{ flexDirection: 'column' }}>
                             <Grid item sx={{ flex: '7', padding:"10px" }}>
                                 <Paper className='contentPaper' sx={{ ...testingStyle, height: "100%" }} elevation={3}>
-                                    SearchingBarComponent
+                                    <QuickAccessComp></QuickAccessComp>
                                 </Paper>
                             </Grid>
                             <Grid item sx={{ flex: '3', padding: "10px" }}>
