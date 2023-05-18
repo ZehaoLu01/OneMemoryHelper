@@ -62,8 +62,8 @@ export default function App() {
                                     Tasking area
                                 </Paper>
                             </Grid>
-                            <Grid item >
-                                <Paper className="contentPaper" sx={{ ...testingStyle, height: '600px' }} elevation={3}>
+                            <Grid item sx={{height:'300px'}}>
+                                <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
                                     Calendar View
                                 </Paper>
                             </Grid>
