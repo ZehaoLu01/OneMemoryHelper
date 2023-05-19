@@ -7,13 +7,14 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import './custom.css';
-import QuickAccessComp from './components/QuickAccessComp'
 import Nav from './components/Nav'
 import { Style } from "../../node_modules/@material-ui/icons/index";
 
 import './App.css'
 import NewNotesComp from "./components/NewNotesComponents";
 import TaskCards from "./components/TaskCards";
+import ShortcutCards from "./components/ShortcutCards"
+import LinearWithValueLabel from "./components/LinearWithValueLabel";
 
 const theme = createTheme({
     palette: {
@@ -45,22 +46,28 @@ export default function App() {
             <Box sx={{ display: "flex", flexFlow: 'column wrap' }}>
                 <Nav />
                 <Container maxWidth="xl">
-                    <Grid container spacing={2} sx={{ height: '100%' }}>
+                    <Grid container spacing={3}>
                         <Grid item xs={12} md={8}>
-                            <Paper className='contentPaper' sx={{ ...testingStyle, mb: 3 }} elevation={3}>
-                                <QuickAccessComp/>
-                            </Paper>
-                              
+                            <Typography variant="h4" gutterBottom>
+                                Quick Access
+                            </Typography>
+                            <ShortcutCards />
+                            <Typography variant="h4" gutterBottom>
+                                Recently Edited Notes
+                            </Typography>
                             <Paper className='contentPaper' sx={{ ...testingStyle }} elevation={3}>
                                 <NewNotesComp/>
                             </Paper>
                         </Grid>
                         <Grid item xs>
+                            <Typography variant="h4" gutterBottom>
+                                Tasks
+                            </Typography>
                             <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
-                                <Typography variant="h4" gutterBottom>
-                                    Today's Tasks
-                                </Typography>
-                                <TaskCards/>
+                                <Container>
+                                    <LinearWithValueLabel></LinearWithValueLabel>
+                                    <TaskCards/>
+                                </Container>
                             </Paper>
                         </Grid>
                     </Grid>

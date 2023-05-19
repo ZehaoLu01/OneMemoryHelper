@@ -10,9 +10,11 @@
     IconButton,
     styled,
     useTheme,
+    Menu,
+    MenuItem,
 } from '@mui/material';
 import { format } from 'date-fns';
-import { Fragment } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 
 const StarOutline = styled(Fab)(() => ({
     marginLeft: 0,
@@ -61,53 +63,54 @@ const ProjectName = styled(Span)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: { marginLeft: 4 },
 }));
 
-
-export default function TaskCards(){
+export default function TaskCards() {
+    const [anchorEl, setAnchorEl] = useState(null);
     const { palette } = useTheme();
-    const textMuted = palette.text.secondary;
+    const isMoreVertOpen = Boolean(anchorEl);
+
+    const handleMoreVertClick = useCallback((event) => {
+        setAnchorEl(event.currentTarget);
+    });
+    const handleMoreVertClose = useCallback(() => {
+        setAnchorEl(null);
+    });
 
     return [1, 2, 3, 4].map((id) => (
         <Fragment key={id}>
             <Card sx={{ py: 1, px: 2 }} className="project-card">
                 <Grid container alignItems="center">
-                    <Grid item md={5} xs={7}>
+                    <Grid item md={8} xs={7}>
                         <Box display="flex" alignItems="center">
                             <Checkbox />
-                            <Hidden smDown>
-                                {id % 2 === 1 ? (
-                                    <StarOutline size="small">
-                                        <Icon>star_outline</Icon>
-                                    </StarOutline>
-                                ) : (
-                                    <DateRange size="small">
-                                        <Icon>date_range</Icon>
-                                    </DateRange>
-                                )}
-                            </Hidden>
+                            <StarOutline size="small">
+                                <Icon>star_outline</Icon>
+                            </StarOutline>
                             <ProjectName>Project {id}</ProjectName>
                         </Box>
                     </Grid>
 
                     <Grid item md={3} xs={4}>
-                        <Box color={textMuted}>{format(new Date().getTime(), 'MM/dd/yyyy hh:mma')}</Box>
+                        <Box> NoteBook </Box>
                     </Grid>
-
-                    <Hidden smDown>
-                        <Grid item xs={3}>
-                            <Box display="flex" position="relative" marginLeft="-0.875rem !important">
-                                <StyledAvatar src="/assets/images/face-4.jpg" />
-                                <StyledAvatar src="/assets/images/face-4.jpg" />
-                                <StyledAvatar src="/assets/images/face-4.jpg" />
-                                <StyledAvatar sx={{ fontSize: '14px' }}>+3</StyledAvatar>
-                            </Box>
-                        </Grid>
-                    </Hidden>
 
                     <Grid item xs={1}>
                         <Box display="flex" justifyContent="flex-end">
-                            <IconButton>
+                            <IconButton onClick={handleMoreVertClick}>
                                 <Icon>more_vert</Icon>
                             </IconButton>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={isMoreVertOpen}
+                                onClose={handleMoreVertClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                }}
+                            >
+                                <MenuItem onClick={handleMoreVertClose}>1</MenuItem>
+                                <MenuItem onClick={handleMoreVertClose}>2</MenuItem>
+                                <MenuItem onClick={handleMoreVertClose}>3</MenuItem>
+                            </Menu>
                         </Box>
                     </Grid>
                 </Grid>
