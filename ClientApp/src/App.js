@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import './custom.css';
 import QuickAccessComp from './components/QuickAccessComp'
@@ -11,6 +12,8 @@ import Nav from './components/Nav'
 import { Style } from "../../node_modules/@material-ui/icons/index";
 
 import './App.css'
+import NewNotesComp from "./components/NewNotesComponents";
+import TaskCards from "./components/TaskCards";
 
 const theme = createTheme({
     palette: {
@@ -39,38 +42,26 @@ export default function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Box sx={{ display: "flex", flexDirection: "column", height:"100vh"}}>
+            <Box sx={{ display: "flex", flexFlow: 'column wrap' }}>
                 <Nav />
-                <Box sx={{ height: '10px' }}></Box>
-                <Container sx={{ height: "100%" }} maxWidth="xxl">
+                <Container maxWidth="xl">
                     <Grid container spacing={2} sx={{ height: '100%' }}>
                         <Grid item xs={12} md={8}>
-                            <Grid container spacing={2} direction='column' sx={{ height: '100%' }}>
-                                <Grid item sx={{ flex: '7', padding: "10px" }}>
-                                    <Paper className='contentPaper' sx={{ ...testingStyle, height: "100%" }} elevation={3}>
-                                        <QuickAccessComp></QuickAccessComp>
-                                    </Paper>
-                                </Grid>
-                                <Grid item sx={{ flex: '3', padding: "10px" }}>
-                                    <Paper className='contentPaper' sx={{ ...testingStyle, height: "100%" }} elevation={3}>
-                                        NewNotesComponent
-                                    </Paper>
-                                </Grid>
-                            </Grid>
+                            <Paper className='contentPaper' sx={{ ...testingStyle, mb: 3 }} elevation={3}>
+                                <QuickAccessComp/>
+                            </Paper>
+                              
+                            <Paper className='contentPaper' sx={{ ...testingStyle }} elevation={3}>
+                                <NewNotesComp/>
+                            </Paper>
                         </Grid>
                         <Grid item xs>
-                            <Grid container spacing={3} direction='column' sx={{height:'100%'}}>
-                                <Grid item sx={{flex:3}}>
-                                    <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
-                                        Tasking area
-                                    </Paper>
-                                </Grid>
-                                <Grid item sx={{ height: '300px' }}>
-                                    <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
-                                        Calendar View
-                                    </Paper>
-                                </Grid>
-                            </Grid>
+                            <Paper className="contentPaper" sx={{ ...testingStyle, height: '100%' }} elevation={3}>
+                                <Typography variant="h4" gutterBottom>
+                                    Today's Tasks
+                                </Typography>
+                                <TaskCards/>
+                            </Paper>
                         </Grid>
                     </Grid>
                 </Container>
