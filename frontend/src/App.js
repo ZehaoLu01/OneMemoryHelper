@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import "./custom.css";
 import Nav from "./components/Nav";
 
@@ -13,6 +12,7 @@ import NewNotesComp from "./components/NewNotesComponents";
 import TaskCards from "./components/TaskCards";
 import ShortcutCards from "./components/ShortcutCards";
 import LinearWithValueLabel from "./components/LinearWithValueLabel";
+import { authorizationContext } from "./context";
 
 const theme = createTheme({
   palette: {
@@ -40,46 +40,48 @@ const testingStyle = {
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex", flexFlow: "column wrap" }}>
-        <Nav />
-        <Container maxWidth="xl">
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
-              <Typography variant="h4" gutterBottom>
-                Quick Access
-              </Typography>
-              <ShortcutCards />
-              <Typography variant="h4" gutterBottom>
-                Recently Edited Notes
-              </Typography>
-              <Paper
-                className="contentPaper"
-                sx={{ ...testingStyle }}
-                elevation={3}
-              >
-                <NewNotesComp />
-              </Paper>
+      <authorizationContext.Provider>
+        <Box sx={{ display: "flex", flexFlow: "column wrap" }}>
+          <Nav />
+          <Container maxWidth="xl">
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={8}>
+                <Typography variant="h4" gutterBottom>
+                  Quick Access
+                </Typography>
+                <ShortcutCards />
+                <Typography variant="h4" gutterBottom>
+                  Recently Edited Notes
+                </Typography>
+                <Paper
+                  className="contentPaper"
+                  sx={{ ...testingStyle }}
+                  elevation={3}
+                >
+                  <NewNotesComp />
+                </Paper>
+              </Grid>
+              <Grid item xs>
+                <Typography variant="h4" gutterBottom>
+                  Tasks
+                </Typography>
+                <Paper
+                  className="contentPaper"
+                  sx={{ ...testingStyle, height: "100%" }}
+                  elevation={3}
+                >
+                  <Container>
+                    <Box sx={{ mt: "8px", mb: "8px" }}>
+                      <LinearWithValueLabel></LinearWithValueLabel>
+                    </Box>
+                    <TaskCards />
+                  </Container>
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item xs>
-              <Typography variant="h4" gutterBottom>
-                Tasks
-              </Typography>
-              <Paper
-                className="contentPaper"
-                sx={{ ...testingStyle, height: "100%" }}
-                elevation={3}
-              >
-                <Container>
-                  <Box sx={{ mt: "8px", mb: "8px" }}>
-                    <LinearWithValueLabel></LinearWithValueLabel>
-                  </Box>
-                  <TaskCards />
-                </Container>
-              </Paper>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+          </Container>
+        </Box>
+      </authorizationContext.Provider>
     </ThemeProvider>
   );
 }
