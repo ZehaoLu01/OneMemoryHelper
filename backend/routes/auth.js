@@ -12,6 +12,8 @@ var {
   POST_LOGOUT_REDIRECT_URI,
 } = require("../authConfig");
 
+var axios = require("axios");
+
 const router = express.Router();
 const msalInstance = new msal.ConfidentialClientApplication(msalConfig);
 const cryptoProvider = new msal.CryptoProvider();
@@ -67,7 +69,11 @@ async function redirectToAuthCodeUrl(
     const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(
       req.session.authCodeUrlRequest
     );
-    res.redirect(authCodeUrlResponse);
+
+    var response = await axios.get(authCodeUrlResponse);
+    console.log("axios response" + response);
+
+    // res.redirect(authCodeUrlResponse);
   } catch (error) {
     next(error);
   }
@@ -85,7 +91,7 @@ router.get("/signin", async function (req, res, next) {
   const state = cryptoProvider.base64Encode(
     JSON.stringify({
       csrfToken: req.session.csrfToken,
-      redirectTo: "/",
+      redirectTo: "",
     })
   );
 

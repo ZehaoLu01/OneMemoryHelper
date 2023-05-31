@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import axios from 'axios'
 
 import { authorizationContext } from '../context';
 
@@ -45,6 +46,11 @@ export default function Nav() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+        axios.get("http://localhost:3000/auth/signin").then((res)=>{
+            
+        }).catch((err)=>{
+            console.log(err);
+        })
     };
 
     return (
