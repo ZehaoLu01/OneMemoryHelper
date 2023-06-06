@@ -46,8 +46,8 @@ export default function Nav() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
-        axios.get("http://localhost:3000/auth/signin").then((res)=>{
-            
+        axios.get("/auth/signin").then((res)=>{
+            window.location.href= res.request.responseURL;
         }).catch((err)=>{
             console.log(err);
         })
@@ -167,7 +167,8 @@ export default function Nav() {
                         >
                             {getSettings().map((setting) => (
                                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
+                                    {/* <Typography textAlign="center">{setting}</Typography> */}
+                                    <button href="/auth/signin">test</button>
                                 </MenuItem>
                             ))}
                         </Menu>

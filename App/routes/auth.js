@@ -69,11 +69,7 @@ async function redirectToAuthCodeUrl(
     const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(
       req.session.authCodeUrlRequest
     );
-
-    var response = await axios.get(authCodeUrlResponse);
-    console.log("axios response" + response);
-
-    // res.redirect(authCodeUrlResponse);
+    res.redirect(authCodeUrlResponse);
   } catch (error) {
     next(error);
   }
@@ -91,7 +87,7 @@ router.get("/signin", async function (req, res, next) {
   const state = cryptoProvider.base64Encode(
     JSON.stringify({
       csrfToken: req.session.csrfToken,
-      redirectTo: "",
+      redirectTo: "/users",
     })
   );
 
@@ -137,11 +133,11 @@ router.get("/acquireToken", async function (req, res, next) {
 
   const authCodeUrlRequestParams = {
     state: state,
-    scopes: ["User.Read"],
+    scope: ["User.Read"],
   };
 
   const authCodeRequestParams = {
-    scopes: ["User.Read"],
+    scope: ["User.Read"],
   };
 
   // trigger the first leg of auth code flow
@@ -173,6 +169,7 @@ router.post("/redirect", async function (req, res, next) {
         req.session.isAuthenticated = true;
 
         res.redirect(state.redirectTo);
+        console.log("123");
       } catch (error) {
         next(error);
       }
