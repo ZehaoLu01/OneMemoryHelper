@@ -1,5 +1,5 @@
 {
-  "name": "onememoryhelper",
+  "name": "client",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3000",
@@ -57,7 +57,7 @@
     "nth-check": "^3.0.1"
   },
   "scripts": {
-    "start": "rimraf ./build && react-scripts start",
+    "start": "rimraf ./build && set PORT=44430 && react-scripts start ",
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
