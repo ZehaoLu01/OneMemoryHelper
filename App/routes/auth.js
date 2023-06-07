@@ -87,7 +87,7 @@ router.get("/signin", async function (req, res, next) {
   const state = cryptoProvider.base64Encode(
     JSON.stringify({
       csrfToken: req.session.csrfToken,
-      redirectTo: "/users",
+      redirectTo: "http://localhost:44430/",
     })
   );
 
@@ -127,7 +127,7 @@ router.get("/acquireToken", async function (req, res, next) {
   const state = cryptoProvider.base64Encode(
     JSON.stringify({
       csrfToken: req.session.csrfToken,
-      redirectTo: "/users/profile",
+      redirectTo: "http://localhost:44430/",
     })
   );
 
@@ -169,7 +169,6 @@ router.post("/redirect", async function (req, res, next) {
         req.session.isAuthenticated = true;
 
         res.redirect(state.redirectTo);
-        console.log("123");
       } catch (error) {
         next(error);
       }
