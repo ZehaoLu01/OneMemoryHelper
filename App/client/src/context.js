@@ -1,5 +1,5 @@
 import { createContext } from "react";
 
-const authorizationContext = createContext(false);
+const authorizationContext = createContext({ isAuthorized: false });
 
 export { authorizationContext };

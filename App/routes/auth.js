@@ -98,7 +98,14 @@ router.get("/signin", async function (req, res, next) {
      * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
      * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
      */
-    scopes: [],
+    scopes: [
+      "Notes.Create",
+      "Notes.Read",
+      "Notes.Read.All",
+      "Notes.ReadWrite",
+      "Notes.ReadWrite.All",
+      "Notes.ReadWrite.CreatedByApp",
+    ],
   };
 
   const authCodeRequestParams = {
@@ -106,7 +113,14 @@ router.get("/signin", async function (req, res, next) {
      * By default, MSAL Node will add OIDC scopes to the auth code request. For more information, visit:
      * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
      */
-    scopes: [],
+    scopes: [
+      "Notes.Create",
+      "Notes.Read",
+      "Notes.Read.All",
+      "Notes.ReadWrite",
+      "Notes.ReadWrite.All",
+      "Notes.ReadWrite.CreatedByApp",
+    ],
   };
 
   // trigger the first leg of auth code flow
@@ -166,8 +180,8 @@ router.post("/redirect", async function (req, res, next) {
         req.session.accessToken = tokenResponse.accessToken;
         req.session.idToken = tokenResponse.idToken;
         req.session.account = tokenResponse.account;
-        req.session.isAuthenticated = true;
-
+        req.session.isAuthorized = true;
+        console.log("accessToken:", tokenResponse.accessToken);
         res.redirect(state.redirectTo);
       } catch (error) {
         next(error);
@@ -190,6 +204,14 @@ router.get("/signout", function (req, res) {
 
   req.session.destroy(() => {
     res.redirect(logoutUri);
+  });
+});
+
+router.get("/state", function (req, res) {
+  console.log(req.session.isAuthorized);
+  res.json({
+    isAuthorized: req.session.isAuthorized,
+    accessToken: req.session.accessToken,
   });
 });
 

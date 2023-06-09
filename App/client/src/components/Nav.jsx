@@ -17,19 +17,21 @@ import axios from 'axios'
 import { authorizationContext } from '../context';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Signin', 'Logout'];
 
 export default function Nav() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const isAuthorized = React.useContext(authorizationContext);
+    const authContext = React.useContext(authorizationContext);
 
     const getSettings = ()=>{
-        if(isAuthorized){
-            return ['Sign Out'];
+        console.log(authContext);
+        if(authContext.isAuthorized===true){
+        console.log("sign out");
+
+            return [{label:'Sign Out', callback:handleSignout}];
         }
         else{
-            return ['Sign In', 'some other items'];
+            return [{label:'Sign In', callback:handleSignin}, {label:'some other items'}];
         }
     }
 
@@ -46,12 +48,23 @@ export default function Nav() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+
+    const handleSignin = ()=>{
         axios.get("/auth/signin").then((res)=>{
             window.location.href= res.request.responseURL;
         }).catch((err)=>{
             console.log(err);
         })
-    };
+    }
+
+    const handleSignout = ()=>{
+        axios.get("/auth/signout").then((res)=>{
+            window.location.href=res.request.responseURL;
+        }).catch((err)=>{
+            console.log(err);
+        })
+    }
 
     return (
         <AppBar position="static">
@@ -166,9 +179,8 @@ export default function Nav() {
                             onClose={handleCloseUserMenu}
                         >
                             {getSettings().map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    {/* <Typography textAlign="center">{setting}</Typography> */}
-                                    <button href="/auth/signin">test</button>
+                                <MenuItem key={setting.label} onClick={setting.callback}>
+                                    <Typography textAlign="center">{setting.label}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>

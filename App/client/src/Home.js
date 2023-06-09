@@ -13,6 +13,8 @@ import TaskCards from "./components/TaskCards";
 import ShortcutCards from "./components/ShortcutCards";
 import LinearWithValueLabel from "./components/LinearWithValueLabel";
 import { authorizationContext } from "./context";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const theme = createTheme({
   palette: {
@@ -38,9 +40,22 @@ const testingStyle = {
 };
 
 export default function Home() {
+  const [authState, setAuthState] = useState({});
+
+  useEffect(() => {
+    async function fetchState() {
+      const res = await axios.get("/auth/state");
+      if (res.data === undefined) {
+        setAuthState({ isAuthorized: false });
+      } else {
+        setAuthState(res.data);
+      }
+    }
+    fetchState();
+  }, []);
   return (
     <ThemeProvider theme={theme}>
-      <authorizationContext.Provider>
+      <authorizationContext.Provider value={authState}>
         <Box sx={{ display: "flex", flexFlow: "column wrap" }}>
           <Nav />
           <Container maxWidth="xl">
