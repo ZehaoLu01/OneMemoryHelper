@@ -105,6 +105,7 @@ export default function NewNotesComp() {
   const queryDateString = "lastModifiedDateTime ge 2023-05-17";
 
   useEffect(() => {
+    console.log("fetch notes");
     axios
       .get("/notes/recentModified", {
         params: { $filter: queryDateString },
@@ -112,7 +113,9 @@ export default function NewNotesComp() {
       .then((res) => {
         console.log(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   }, [rowsPerPage, page]);
 
   // Avoid a layout jump when reaching the last page with empty rows.

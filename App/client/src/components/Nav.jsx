@@ -26,8 +26,6 @@ export default function Nav() {
     const getSettings = ()=>{
         console.log(authContext);
         if(authContext.isAuthorized===true){
-        console.log("sign out");
-
             return [{label:'Sign Out', callback:handleSignout}];
         }
         else{
@@ -51,7 +49,7 @@ export default function Nav() {
     };
 
     const handleSignin = ()=>{
-        axios.get("/auth/signin").then((res)=>{
+        axios.get("/api/auth/signin").then((res)=>{
             window.location.href= res.request.responseURL;
         }).catch((err)=>{
             console.log(err);
@@ -59,7 +57,7 @@ export default function Nav() {
     }
 
     const handleSignout = ()=>{
-        axios.get("/auth/signout").then((res)=>{
+        axios.get("/api/auth/signout").then((res)=>{
             window.location.href=res.request.responseURL;
         }).catch((err)=>{
             console.log(err);
