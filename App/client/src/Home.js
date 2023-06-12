@@ -44,7 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchState() {
-      const res = await axios.get("/auth/state");
+      const res = await axios.get("http://localhost:3000/auth/state");
       if (res.data === undefined) {
         setAuthState({ isAuthorized: false });
       } else {

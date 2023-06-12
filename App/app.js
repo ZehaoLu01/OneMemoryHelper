@@ -7,6 +7,7 @@ var session = require("express-session");
 
 var usersRouter = require("./routes/users");
 var authRouter = require("./routes/auth");
+var notesRouter = require("./routes/notes");
 
 var app = express();
 
@@ -20,9 +21,6 @@ app.use(
     },
   })
 );
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -32,6 +30,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+app.use("/notes", notesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
