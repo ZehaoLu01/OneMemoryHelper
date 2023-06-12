@@ -107,7 +107,7 @@ export default function NewNotesComp() {
   useEffect(() => {
     console.log("fetch notes");
     axios
-      .get("/notes/recentModified", {
+      .get("/api/notes/recentModified", {
         params: { $filter: queryDateString },
       })
       .then((res) => {

@@ -12,8 +12,6 @@ var {
   POST_LOGOUT_REDIRECT_URI,
 } = require("../authConfig");
 
-var axios = require("axios");
-
 const router = express.Router();
 const msalInstance = new msal.ConfidentialClientApplication(msalConfig);
 const cryptoProvider = new msal.CryptoProvider();
