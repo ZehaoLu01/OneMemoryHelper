@@ -48,17 +48,19 @@ export default function Nav() {
         setAnchorElUser(null);
     };
 
-    const handleSignin = ()=>{
-        axios.get("/api/auth/signin").then((res)=>{
+    const handleSignin = async ()=>{
+        try{
+            const res = await axios.get("/api/auth/signin");
             window.location.href= res.request.responseURL;
-        }).catch((err)=>{
+        }
+        catch(err){
             console.log(err);
-        })
+        }
     }
 
     const handleSignout = ()=>{
         axios.get("/api/auth/signout").then((res)=>{
-            window.location.href=res.request.responseURL;
+            // window.location.href=res.request.responseURL;
         }).catch((err)=>{
             console.log(err);
         })
