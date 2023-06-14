@@ -76,7 +76,6 @@ async function redirectToAuthCodeUrl(
 router.get("/signin", async function (req, res, next) {
   // create a GUID for crsf
   req.session.csrfToken = cryptoProvider.createNewGuid();
-
   /**
    * The MSAL Node library allows you to pass your custom state as state parameter in the Request object.
    * The state parameter can also be used to encode information of the app's state before redirect.
@@ -85,7 +84,7 @@ router.get("/signin", async function (req, res, next) {
   const state = cryptoProvider.base64Encode(
     JSON.stringify({
       csrfToken: req.session.csrfToken,
-      redirectTo: "http://localhost:44430/",
+      redirectTo: "http://localhost:3000/",
     })
   );
 
@@ -139,17 +138,31 @@ router.get("/acquireToken", async function (req, res, next) {
   const state = cryptoProvider.base64Encode(
     JSON.stringify({
       csrfToken: req.session.csrfToken,
-      redirectTo: "http://localhost:44430/",
+      redirectTo: "http://localhost:3000/",
     })
   );
 
   const authCodeUrlRequestParams = {
     state: state,
-    scope: ["User.Read"],
+    scopes: [
+      "Notes.Create",
+      "Notes.Read",
+      "Notes.Read.All",
+      "Notes.ReadWrite",
+      "Notes.ReadWrite.All",
+      "Notes.ReadWrite.CreatedByApp",
+    ],
   };
 
   const authCodeRequestParams = {
-    scope: ["User.Read"],
+    scopes: [
+      "Notes.Create",
+      "Notes.Read",
+      "Notes.Read.All",
+      "Notes.ReadWrite",
+      "Notes.ReadWrite.All",
+      "Notes.ReadWrite.CreatedByApp",
+    ],
   };
 
   // trigger the first leg of auth code flow
@@ -180,15 +193,6 @@ router.post("/redirect", async function (req, res, next) {
         req.session.account = tokenResponse.account;
         req.session.isAuthorized = true;
 
-        res.cookie("accessToken", tokenResponse.accessToken, {
-          expires: new Date(Date.now() + 9000000),
-          httpOnly: true,
-        });
-        res.cookie("isAuthorized", true, {
-          expires: new Date(Date.now() + 9000000),
-          httpOnly: true,
-        });
-
         console.log("accessToken:", tokenResponse.accessToken);
         res.redirect(state.redirectTo);
       } catch (error) {
@@ -209,28 +213,21 @@ router.get("/signout", function (req, res) {
    * https://docs.microsoft.com/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request
    */
   const logoutUri = `${msalConfig.auth.authority}/oauth2/v2.0/logout?post_logout_redirect_uri=${POST_LOGOUT_REDIRECT_URI}`;
-  res.clearCookie("isAuthorized");
-  res.clearCookie("accessToken");
 
   req.session.destroy(() => {
     res.redirect(logoutUri);
   });
 });
 
-router.get("/state", function (req, res) {
+router.get("/state", async function (req, res) {
   if (
     req.session.isAuthorized === undefined ||
-    req.session.accessToken === undefined
+    req.session.isAuthorized === false
   ) {
-    if (req.cookies.accessToken && req.cookies.isAuthorized === "true") {
-      req.session.isAuthorized = true;
-      req.session.accessToken = req.cookies.accessToken;
-    }
+    res.json({ isAuthorized: false });
+  } else {
+    res.json({ isAuthorized: true });
   }
-  res.json({
-    isAuthorized: req.session.isAuthorized,
-    accessToken: req.session.accessToken,
-  });
 });
 
 module.exports = router;
