@@ -4,14 +4,19 @@ var axios = require("axios");
 
 router.use("/recentModified", async function (req, res, next) {
   try {
-    console.log("login state: " + req.session.isAuthorized);
-    // const requestURL = `https://graph.microsoft.com/v1.0/me/onenote/pages?$filter=lastModifiedDateTime%20ge%202023-05-17`;
-    const requestURL = `https://graph.microsoft.com/v1.0/me/onenote/pages`;
+    if (req.session.isAuthorized === true) {
+      const lastModifiedDateTime =
+        req.query.lastModifiedDateTime === undefined
+          ? new Date().toISOString().slice(0, 10)
+          : req.query.lastModifiedDateTime;
 
-    const noteResponse = await axios.get(requestURL, {
-      headers: { Authorization: "Bearer " + req.session.accessToken },
-    });
-    res.json(noteResponse);
+      const requestURL = `https://graph.microsoft.com/v1.0/me/onenote/pages?$filter=lastModifiedDateTime ge ${lastModifiedDateTime}`;
+
+      const noteResponse = await axios.get(requestURL, {
+        headers: { Authorization: "Bearer " + req.session.accessToken },
+      });
+      res.json(noteResponse.data);
+    }
   } catch (err) {
     next(err);
   }

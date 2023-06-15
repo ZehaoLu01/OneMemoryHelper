@@ -100,27 +100,29 @@ const rows = [new Note("Cupcake", 305, 1, 3.7)].sort((a, b) =>
 
 export default function NewNotesComp() {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [notesPerPage, setRowsPerPage] = useState(10);
   const [notes, setNotes] = useState([]);
-  const queryDateString = "lastModifiedDateTime ge 2023-05-17";
+  const queryDateString = "2023-05-17";
 
   useEffect(() => {
     console.log("fetch notes");
     axios
       .get("/api/notes/recentModified", {
-        params: { $filter: queryDateString },
+        params: { lastModifiedDateTime: queryDateString },
       })
       .then((res) => {
-        console.log(res.data);
+        if (res.data.value !== undefined) {
+          setNotes(res.data.value);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [rowsPerPage, page]);
+  }, [notesPerPage, page]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * notesPerPage - notes.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -143,22 +145,26 @@ export default function NewNotesComp() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.noteTitle}>
+          {(notesPerPage > 0
+            ? notes.slice(
+                page * notesPerPage,
+                page * notesPerPage + notesPerPage
+              )
+            : notes
+          ).map((note) => (
+            <TableRow key={note.id}>
               <TableCell component="th" scope="row">
-                {row.noteTitle}
+                {note.title}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                {row.tab}
+                {note.parentSection.displayName}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                {row.notebook}
+                {/* {note.notebook} */}
+                Idk
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.dateModified}
+              <TableCell style={{ width: 320 }} align="right">
+                {note.lastModifiedDateTime}
               </TableCell>
             </TableRow>
           ))}
@@ -174,8 +180,8 @@ export default function NewNotesComp() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
               colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
+              count={notes.length}
+              rowsPerPage={notesPerPage}
               page={page}
               SelectProps={{
                 inputProps: {
