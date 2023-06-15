@@ -94,10 +94,6 @@ function Note(noteTitle, tab, notebook, dateModified) {
   this.dateModified = dateModified;
 }
 
-const rows = [new Note("Cupcake", 305, 1, 3.7)].sort((a, b) =>
-  a.calories < b.calories ? -1 : 1
-);
-
 export default function NewNotesComp() {
   const [page, setPage] = useState(0);
   const [notesPerPage, setRowsPerPage] = useState(10);
