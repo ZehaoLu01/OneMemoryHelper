@@ -16,6 +16,8 @@ router.use("/recentModified", async function (req, res, next) {
         headers: { Authorization: "Bearer " + req.session.accessToken },
       });
       res.json(noteResponse.data);
+    } else {
+      res.json({});
     }
   } catch (err) {
     next(err);

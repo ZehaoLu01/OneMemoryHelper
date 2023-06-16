@@ -15,12 +15,15 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+
+import { authorizationContext } from "../context";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
+  const authContext = useContext(authorizationContext);
 
   const handleFirstPageButtonClick = (event) => {
     onPageChange(event, 0);
@@ -87,18 +90,12 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function Note(noteTitle, tab, notebook, dateModified) {
-  this.noteTitle = noteTitle;
-  this.tab = tab;
-  this.notebook = notebook;
-  this.dateModified = dateModified;
-}
-
 export default function NewNotesComp() {
   const [page, setPage] = useState(0);
   const [notesPerPage, setRowsPerPage] = useState(10);
   const [notes, setNotes] = useState([]);
   const queryDateString = "2023-05-17";
+  const authContext = useContext(authorizationContext);
 
   useEffect(() => {
     console.log("fetch notes");
@@ -107,14 +104,14 @@ export default function NewNotesComp() {
         params: { lastModifiedDateTime: queryDateString },
       })
       .then((res) => {
-        if (res.data.value !== undefined) {
+        if (res.data?.value !== undefined) {
           setNotes(res.data.value);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [notesPerPage, page]);
+  }, [authContext.isAuthorized, page]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
