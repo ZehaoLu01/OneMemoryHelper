@@ -180,7 +180,7 @@ router.post("/redirect", async function (req, res, next) {
     const state = JSON.parse(cryptoProvider.base64Decode(req.body.state));
 
     // check if csrfToken matches
-    if (state.csrfToken === req.session.csrfToken) {
+    if (!req.session.csrfToken || state.csrfToken === req.session.csrfToken) {
       req.session.authCodeRequest.code = req.body.code; // authZ code
       req.session.authCodeRequest.codeVerifier = req.session.pkceCodes.verifier; // PKCE Code Verifier
 
