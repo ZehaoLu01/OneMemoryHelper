@@ -1,4 +1,4 @@
-﻿import * as React from 'react';
+﻿import {useState, useContext} from 'react';
 import AppBar  from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -19,9 +19,9 @@ import { authorizationContext } from '../context';
 const pages = ['Products', 'Pricing', 'Blog'];
 
 export default function Nav() {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const authContext = React.useContext(authorizationContext);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
+    const authContext = useContext(authorizationContext);
 
     const getSettings = ()=>{
         console.log(authContext);

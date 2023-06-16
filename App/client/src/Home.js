@@ -41,18 +41,6 @@ const testingStyle = {
 
 export default function Home() {
   const [authState, setAuthState] = useState({});
-
-  useEffect(() => {
-    async function fetchState() {
-      const res = await axios.get("/api/auth/state");
-      if (res.data === undefined) {
-        setAuthState({ isAuthorized: false });
-      } else {
-        setAuthState(res.data);
-      }
-    }
-    fetchState();
-  }, []);
   return (
     <ThemeProvider theme={theme}>
       <authorizationContext.Provider value={authState}>
