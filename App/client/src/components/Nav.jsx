@@ -24,7 +24,6 @@ export default function Nav() {
     const authContext = useContext(authorizationContext);
 
     const getSettings = ()=>{
-        console.log(authContext);
         if(authContext.isAuthorized===true){
             return [{label:'Sign Out', callback:handleSignout}];
         }

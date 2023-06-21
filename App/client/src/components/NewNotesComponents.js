@@ -23,8 +23,6 @@ import { authorizationContext } from "../context";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
-  const authContext = useContext(authorizationContext);
-
   const handleFirstPageButtonClick = (event) => {
     onPageChange(event, 0);
   };
@@ -98,7 +96,6 @@ export default function NewNotesComp() {
   const authContext = useContext(authorizationContext);
 
   useEffect(() => {
-    console.log("fetch notes");
     axios
       .get("/api/notes/recentModified", {
         params: { lastModifiedDateTime: queryDateString },
