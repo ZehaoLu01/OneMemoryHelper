@@ -11,6 +11,7 @@ var {
   REDIRECT_URI,
   POST_LOGOUT_REDIRECT_URI,
 } = require("../authConfig");
+const userServices = require("../services/user");
 
 const router = express.Router();
 const msalInstance = new msal.ConfidentialClientApplication(msalConfig);
@@ -190,10 +191,16 @@ router.post("/redirect", async function (req, res, next) {
         );
         req.session.accessToken = tokenResponse.accessToken;
         req.session.idToken = tokenResponse.idToken;
+        req.session.idTokenClaims = tokenResponse.idTokenClaims;
         req.session.account = tokenResponse.account;
         req.session.isAuthorized = true;
 
-        console.log("accessToken:", tokenResponse.accessToken);
+        userServices.upsertUser(
+          tokenResponse.idTokenClaims.oid,
+          tokenResponse.idTokenClaims.email,
+          tokenResponse.idTokenClaims.name
+        );
+
         res.redirect(state.redirectTo);
       } catch (error) {
         next(error);

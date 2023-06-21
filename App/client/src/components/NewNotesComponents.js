@@ -92,12 +92,13 @@ export default function NewNotesComp() {
   const [page, setPage] = useState(0);
   const [notesPerPage, setRowsPerPage] = useState(10);
   const [notes, setNotes] = useState([]);
+  // for testing
   const queryDateString = "2023-05-17";
   const authContext = useContext(authorizationContext);
 
   useEffect(() => {
     axios
-      .get("/api/notes/recentModified", {
+      .get("/api/notes/recentlyModified", {
         params: { lastModifiedDateTime: queryDateString },
       })
       .then((res) => {
