@@ -109,7 +109,7 @@ export default function NewNotesComp() {
       .catch((err) => {
         console.log(err);
       });
-  }, [authContext.isAuthorized, page]);
+  }, [authContext.isAuthorized]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -148,7 +148,7 @@ export default function NewNotesComp() {
                 {note.title}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                {note.parentSection.displayName}
+                {note.parentSectionTitle}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
                 {/* {note.notebook} */}

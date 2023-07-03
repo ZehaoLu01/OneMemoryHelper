@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/one_memory_helper");
-console.log(mongoose.connection.readyState);
-
 const checkConnection = async () => {
   if (mongoose.connection.readyState != 1) {
     await mongoose.connect("mongodb://127.0.0.1:27017/one_memory_helper");
@@ -51,6 +48,15 @@ userData.insert = async (user) => {
   }
 };
 
+userData.upsert = async (id, email, name) => {
+  try {
+    const result = await userData.upsert(id, email, name);
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 userData.updateUpdateTime = async (id, updateTime) => {
   try {
     await checkConnection();
@@ -69,7 +75,7 @@ userData.updateUpdateTime = async (id, updateTime) => {
       );
     }
   } catch (err) {
-    throw new Error(err);
+    console.log(err);
   }
 };
 
@@ -80,7 +86,7 @@ userData.getUserData = async (id) => {
 
     return result;
   } catch (err) {
-    throw new Error(err);
+    console.log(err);
   }
 };
 
