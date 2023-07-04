@@ -11,6 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
@@ -145,7 +146,12 @@ export default function NewNotesComp() {
           ).map((note) => (
             <TableRow key={note.id}>
               <TableCell component="th" scope="row">
-                {note.title}
+                <Link
+                  href={note.clientUrl ? note.clientUrl : note.webUrl}
+                  underline="hover"
+                >
+                  {note.title}
+                </Link>
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
                 {note.parentSectionTitle}
