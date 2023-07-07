@@ -1,11 +1,7 @@
 ﻿import {
-  Avatar,
   Box,
   Card,
-  Checkbox,
-  Fab,
   Grid,
-  Hidden,
   Icon,
   IconButton,
   styled,
@@ -13,27 +9,9 @@
   Menu,
   MenuItem,
 } from "@mui/material";
-import { format } from "date-fns";
-import { Fragment, useCallback, useState } from "react";
-
-const StarOutline = styled(Fab)(() => ({
-  marginLeft: 0,
-  boxShadow: "none",
-  background: "#08ad6c !important",
-  backgroundColor: "rgba(9, 182, 109, 1) !important",
-}));
-
-const DateRange = styled(Fab)(({ theme }) => ({
-  marginLeft: 0,
-  boxShadow: "none",
-  color: "white !important",
-  background: `${theme.palette.error.main} !important`,
-}));
-
-const StyledAvatar = styled(Avatar)(() => ({
-  width: "32px !important",
-  height: "32px !important",
-}));
+import axios from "axios";
+import { Fragment, useCallback, useEffect, useState, useContext } from "react";
+import { authorizationContext } from "../context";
 
 const StyledBox = styled(Box)(({ theme, textTransformStyle, ellipsis }) => ({
   textTransform: textTransformStyle || "none",
@@ -57,40 +35,51 @@ const Span = ({ children, className, ellipsis, textTransform, ...props }) => {
   );
 };
 
-const ProjectName = styled(Span)(({ theme }) => ({
+const NoteTitle = styled(Span)(({ theme }) => ({
   marginLeft: 24,
   fontWeight: "500",
   [theme.breakpoints.down("sm")]: { marginLeft: 4 },
 }));
 
 export default function TaskCards() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const { palette } = useTheme();
-  const isMoreVertOpen = Boolean(anchorEl);
+  // title: note.title,
+  // section: note.parentSectionTitle,
+  // clientUrl: note.clientUrl,
+  // stage: reviewStage,
+  const [tasks, setTasks] = useState([]);
 
-  const handleMoreVertClick = useCallback((event) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isMoreVertOpen = Boolean(anchorEl);
+  const authContext = useContext(authorizationContext);
+
+  const handleMoreVertClick = useCallback(async (event) => {
     setAnchorEl(event.currentTarget);
-  });
+  }, []);
   const handleMoreVertClose = useCallback(() => {
     setAnchorEl(null);
   });
 
-  return [1, 2, 3, 4].map((id) => (
-    <Fragment key={id}>
+  // maybe should change the dep
+  useEffect(() => {
+    async function fetchTasks() {
+      const res = await axios.get("/api/tasks/allTasks");
+      setTasks(res.data);
+    }
+    fetchTasks();
+  }, [authContext.isAuthorized]);
+
+  return tasks.map((task) => (
+    <Fragment key={task.id}>
       <Card sx={{ py: 1, px: 2 }} className="project-card" elevation={3}>
         <Grid container alignItems="center">
           <Grid item md={8} xs={7}>
             <Box display="flex" alignItems="center">
-              <Checkbox />
-              <StarOutline size="small">
-                <Icon>star_outline</Icon>
-              </StarOutline>
-              <ProjectName>Project {id}</ProjectName>
+              <NoteTitle>{task.title}</NoteTitle>
             </Box>
           </Grid>
 
           <Grid item md={3} xs={4}>
-            <Box> NoteBook </Box>
+            <Box> {task.section} </Box>
           </Grid>
 
           <Grid item xs={1}>
