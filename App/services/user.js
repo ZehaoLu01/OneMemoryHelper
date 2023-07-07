@@ -4,11 +4,7 @@ const userServices = {};
 
 userServices.upsertUser = async (id, email, name) => {
   try {
-    userData.update(
-      { id: id },
-      { id: id, email: email, name: name },
-      { upsert: true }
-    );
+    userData.upsert(id, email, name);
   } catch (err) {
     console.log(err);
   }

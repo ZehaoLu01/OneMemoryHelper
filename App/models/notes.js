@@ -42,6 +42,16 @@ const noteScheme = mongoose.Schema({
     type: String,
     required: true,
   },
+  reviewStage: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  lastReviewTime: {
+    type: Date,
+    required: true,
+    default: Date.now(),
+  },
 });
 
 const noteModel = mongoose.model("note", noteScheme);
@@ -95,6 +105,18 @@ noteData.upsert = async (notes, ownerId) => {
       noteModel.updateOne({ id: note.id }, note, { upsert: true });
     }
     return convertedNotes;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+noteData.setReviewStage = async (id, stage) => {
+  try {
+    const result = await noteModel.updateOne(
+      { id: id },
+      { reviewStage: stage }
+    );
+    return result;
   } catch (err) {
     console.log(err);
   }

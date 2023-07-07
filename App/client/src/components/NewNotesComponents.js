@@ -16,7 +16,8 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { useState, useEffect, useContext } from "react";
+import AddTaskIcon from "@mui/icons-material/AddTask";
+import { useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 
 import { authorizationContext } from "../context";
@@ -134,6 +135,7 @@ export default function NewNotesComp() {
             <TableCell align="right">Tab</TableCell>
             <TableCell align="right">Notebook</TableCell>
             <TableCell align="right">Date Modified</TableCell>
+            <TableCell align="right">Add</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -162,6 +164,13 @@ export default function NewNotesComp() {
               </TableCell>
               <TableCell style={{ width: 320 }} align="right">
                 {note.lastModifiedDateTime}
+              </TableCell>
+              <TableCell align="right">
+                <AddNoteButton
+                  id={note.id}
+                  notes={notes}
+                  setNotes={setNotes}
+                ></AddNoteButton>
               </TableCell>
             </TableRow>
           ))}
@@ -194,5 +203,23 @@ export default function NewNotesComp() {
         </TableFooter>
       </Table>
     </TableContainer>
+  );
+}
+
+function AddNoteButton(props) {
+  const handleAddButtonClick = useCallback(async () => {
+    if (props.id) {
+      props.setNotes(props.notes.filter((note) => note.id !== props.id));
+      const result = await axios.get("/api/notes/setReviewStage", {
+        params: { id: props.id, stage: 1 },
+      });
+      return result;
+    }
+  }, [props]);
+
+  return (
+    <IconButton variant="outlined" onClick={handleAddButtonClick}>
+      <AddTaskIcon />
+    </IconButton>
   );
 }
