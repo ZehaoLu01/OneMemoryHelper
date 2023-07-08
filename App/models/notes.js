@@ -75,7 +75,7 @@ noteData.insertNotes = async (notes, ownerId) => {
     });
     await checkConnection();
 
-    const inserted = await noteModel.updateMany(convertedNotes, {
+    const inserted = await noteModel.insertMany(convertedNotes, {
       ordered: false,
     });
 
@@ -116,6 +116,18 @@ noteData.setReviewStage = async (id, stage) => {
       { id: id },
       { reviewStage: stage }
     );
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+noteData.getNotesOfStage = async (oid, min, max) => {
+  try {
+    const result = await noteModel.find({
+      ownerId: oid,
+      reviewStage: { $gte: min, $lte: max },
+    });
     return result;
   } catch (err) {
     console.log(err);
