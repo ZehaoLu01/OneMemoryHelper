@@ -19,6 +19,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
+import { ReviewStage } from "../noteReviewStage";
 
 import { authorizationContext } from "../context";
 
@@ -90,29 +91,9 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function NewNotesComp() {
+export default function NewNotesComp({ notes, setNotes }) {
   const [page, setPage] = useState(0);
   const [notesPerPage, setRowsPerPage] = useState(10);
-  const [notes, setNotes] = useState([]);
-  // for testing
-  const queryDateString = "2023-05-17";
-  const authContext = useContext(authorizationContext);
-
-  // maybe should change the dependency list.
-  useEffect(() => {
-    axios
-      .get("/api/notes/recentlyModified", {
-        params: { lastModifiedDateTime: queryDateString },
-      })
-      .then((res) => {
-        if (res.data?.value !== undefined) {
-          setNotes(res.data.value);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [authContext.isAuthorized]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -213,7 +194,7 @@ function AddNoteButton(props) {
       props.setNotes(props.notes.filter((note) => note.id !== props.id));
       const result = await axios.put("/api/notes/setReviewStage", {
         id: props.id,
-        stage: 1,
+        stage: ReviewStage.First,
       });
       return result;
     }

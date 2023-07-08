@@ -13,7 +13,7 @@ import TaskCards from "./components/TaskCards";
 import ShortcutCards from "./components/ShortcutCards";
 import LinearWithValueLabel from "./components/LinearWithValueLabel";
 import { authorizationContext } from "./context";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 
 const theme = createTheme({
@@ -41,6 +41,7 @@ const testingStyle = {
 
 export default function Home() {
   const [authState, setAuthState] = useState({ isAuthorized: false });
+  const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -58,6 +59,27 @@ export default function Home() {
       console.log(err);
     }
   }, []);
+
+  // for testing
+  const queryDateString = "2023-05-17";
+  const authContext = useContext(authorizationContext);
+
+  // maybe should change the dependency list.
+  useEffect(() => {
+    axios
+      .get("/api/notes/recentlyModified", {
+        params: { lastModifiedDateTime: queryDateString },
+      })
+      .then((res) => {
+        if (res.data?.value !== undefined) {
+          setNotes(res.data.value);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [authContext.isAuthorized]);
+
   return (
     <ThemeProvider theme={theme}>
       <authorizationContext.Provider value={authState}>
@@ -78,7 +100,7 @@ export default function Home() {
                   sx={{ ...testingStyle }}
                   elevation={3}
                 >
-                  <NewNotesComp />
+                  <NewNotesComp notes={notes} setNotes={setNotes} />
                 </Paper>
               </Grid>
               <Grid item xs>
@@ -94,7 +116,7 @@ export default function Home() {
                     <Box sx={{ mt: "8px", mb: "8px" }}>
                       <LinearWithValueLabel></LinearWithValueLabel>
                     </Box>
-                    <TaskCards />
+                    <TaskCards notes={notes} />
                   </Container>
                 </Paper>
               </Grid>

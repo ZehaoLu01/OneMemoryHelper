@@ -11,8 +11,9 @@
   Link,
 } from "@mui/material";
 import axios from "axios";
-import { Fragment, useCallback, useEffect, useState, useContext } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 import { authorizationContext } from "../context";
+import { ReviewStage } from "../noteReviewStage";
 
 const StyledBox = styled(Box)(({ theme, textTransformStyle, ellipsis }) => ({
   textTransform: textTransformStyle || "none",
@@ -43,7 +44,7 @@ const NoteTitle = styled(Link)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: { marginLeft: 4 },
 }));
 
-export default function TaskCards() {
+export default function TaskCards(notes) {
   // title: note.title,
   // section: note.parentSectionTitle,
   // clientUrl: note.clientUrl,
@@ -51,21 +52,32 @@ export default function TaskCards() {
   const [tasks, setTasks] = useState([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const isMoreVertOpen = Boolean(anchorEl);
+  const [openNoteId, setOpenNoteId] = useState("");
   const authContext = useContext(authorizationContext);
 
-  const handleMoreVertClick = useCallback(async (event) => {
+  const handleMoreVertClick = useCallback(async (event, id) => {
     setAnchorEl(event.currentTarget);
+    setOpenNoteId(id);
   }, []);
   const handleMoreVertClose = useCallback(() => {
     setAnchorEl(null);
+    setOpenNoteId("");
   }, []);
 
-  const handleCompleteTask = async (event, id, currentStage) => {
-    handleMoreVertClick(event);
+  const handleCompleteTask = async (id, currentStage) => {
+    handleMoreVertClose();
     await axios.put("/api/notes/setReviewStage", {
       id: id,
       stage: currentStage + 1,
+    });
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const handleIgnoreNote = async (id) => {
+    handleMoreVertClose();
+    await axios.put("/api/notes/setReviewStage", {
+      id: id,
+      stage: ReviewStage.Completed,
     });
     setTasks(tasks.filter((task) => task.id !== id));
   };
@@ -77,10 +89,10 @@ export default function TaskCards() {
       setTasks(res.data);
     }
     fetchTasks();
-  }, [authContext.isAuthorized]);
+  }, [authContext.isAuthorized, notes]);
 
   return tasks.map((task) => (
-    <Fragment key={task.id}>
+    <Box>
       <Card sx={{ py: 1, px: 2 }} className="project-card" elevation={3}>
         <Grid container alignItems="center">
           <Grid item md={8} xs={7}>
@@ -100,26 +112,32 @@ export default function TaskCards() {
 
           <Grid item xs={1}>
             <Box display="flex" justifyContent="flex-end">
-              <IconButton onClick={handleMoreVertClick}>
+              <IconButton
+                onClick={(e) => {
+                  handleMoreVertClick(e, task.id);
+                }}
+              >
                 <Icon>more_vert</Icon>
               </IconButton>
+
               <Menu
-                id="basic-menu"
                 anchorEl={anchorEl}
-                open={isMoreVertOpen}
+                open={openNoteId === task.id}
                 onClose={handleMoreVertClose}
                 MenuListProps={{
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem
-                  onClick={(e) => {
-                    handleCompleteTask(e, task.id, task.stage);
-                  }}
+                <MenuItemWrapped
+                  id={task.id}
+                  handler={handleCompleteTask}
+                  stage={task.stage}
                 >
                   Completed
-                </MenuItem>
-                <MenuItem onClick={handleMoreVertClose}>2</MenuItem>
+                </MenuItemWrapped>
+                <MenuItemWrapped id={task.id} handler={handleIgnoreNote}>
+                  Ignore
+                </MenuItemWrapped>
                 <MenuItem onClick={handleMoreVertClose}>3</MenuItem>
               </Menu>
             </Box>
@@ -127,6 +145,18 @@ export default function TaskCards() {
         </Grid>
       </Card>
       <Box py={1} />
-    </Fragment>
+    </Box>
   ));
+}
+
+function MenuItemWrapped({ id, handler, children, stage }) {
+  return (
+    <MenuItem
+      onClick={() => {
+        handler(id, stage);
+      }}
+    >
+      {children}
+    </MenuItem>
+  );
 }
