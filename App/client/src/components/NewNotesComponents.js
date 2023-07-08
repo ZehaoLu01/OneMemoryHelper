@@ -211,8 +211,9 @@ function AddNoteButton(props) {
   const handleAddButtonClick = useCallback(async () => {
     if (props.id) {
       props.setNotes(props.notes.filter((note) => note.id !== props.id));
-      const result = await axios.get("/api/notes/setReviewStage", {
-        params: { id: props.id, stage: 1 },
+      const result = await axios.put("/api/notes/setReviewStage", {
+        id: props.id,
+        stage: 1,
       });
       return result;
     }

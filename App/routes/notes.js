@@ -44,14 +44,11 @@ router.use("/recentlyModified", async function (req, res, next) {
   }
 });
 
-router.use("/setReviewStage", async (req, res, next) => {
+router.put("/setReviewStage", async (req, res, next) => {
   try {
-    if (req.query.stage) {
-      if (req.query.id) {
-        const result = await noteServices.setReviewStage(
-          req.query.id,
-          req.query.stage
-        );
+    if (req.body.stage) {
+      if (req.body.id) {
+        await noteServices.setReviewStage(req.body.id, req.body.stage);
       }
     }
     res.json({});

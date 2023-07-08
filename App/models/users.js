@@ -50,7 +50,7 @@ userData.insert = async (user) => {
 
 userData.upsert = async (id, email, name) => {
   try {
-    const result = await userModel.update(
+    const result = await userModel.updateOne(
       { id: id },
       { id: id, email: email, name: name },
       { upsert: true }

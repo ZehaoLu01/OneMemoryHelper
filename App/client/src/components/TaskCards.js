@@ -8,6 +8,7 @@
   useTheme,
   Menu,
   MenuItem,
+  Link,
 } from "@mui/material";
 import axios from "axios";
 import { Fragment, useCallback, useEffect, useState, useContext } from "react";
@@ -35,9 +36,10 @@ const Span = ({ children, className, ellipsis, textTransform, ...props }) => {
   );
 };
 
-const NoteTitle = styled(Span)(({ theme }) => ({
+const NoteTitle = styled(Link)(({ theme }) => ({
   marginLeft: 24,
   fontWeight: "500",
+  underline: "hover",
   [theme.breakpoints.down("sm")]: { marginLeft: 4 },
 }));
 
@@ -57,7 +59,16 @@ export default function TaskCards() {
   }, []);
   const handleMoreVertClose = useCallback(() => {
     setAnchorEl(null);
-  });
+  }, []);
+
+  const handleCompleteTask = async (event, id, currentStage) => {
+    handleMoreVertClick(event);
+    await axios.put("/api/notes/setReviewStage", {
+      id: id,
+      stage: currentStage + 1,
+    });
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
 
   // maybe should change the dep
   useEffect(() => {
@@ -74,7 +85,12 @@ export default function TaskCards() {
         <Grid container alignItems="center">
           <Grid item md={8} xs={7}>
             <Box display="flex" alignItems="center">
-              <NoteTitle>{task.title}</NoteTitle>
+              <NoteTitle
+                component="button"
+                href={task.clientUrl ? task.clientUrl : task.webUrl}
+              >
+                {task.title}
+              </NoteTitle>
             </Box>
           </Grid>
 
@@ -96,7 +112,13 @@ export default function TaskCards() {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem onClick={handleMoreVertClose}>1</MenuItem>
+                <MenuItem
+                  onClick={(e) => {
+                    handleCompleteTask(e, task.id, task.stage);
+                  }}
+                >
+                  Completed
+                </MenuItem>
                 <MenuItem onClick={handleMoreVertClose}>2</MenuItem>
                 <MenuItem onClick={handleMoreVertClose}>3</MenuItem>
               </Menu>

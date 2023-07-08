@@ -9,6 +9,7 @@ router.use("/allTasks", async (req, res, next) => {
     res
       .status(500)
       .json({ reason: "failed to find the user oid from session." });
+    return;
   }
 
   const result = await taskService.findAllTasks(userId);

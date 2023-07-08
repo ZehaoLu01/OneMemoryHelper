@@ -11,6 +11,7 @@ taskService.findAllTasks = async (userId) => {
         title: note.title,
         section: note.parentSectionTitle,
         clientUrl: note.clientUrl,
+        webUrl: note.webUrl,
         stage: note.reviewStage,
       };
     });
