@@ -17,11 +17,9 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import AddTaskIcon from "@mui/icons-material/AddTask";
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
 import { ReviewStage } from "../noteReviewStage";
-
-import { authorizationContext } from "../context";
 
 function TablePaginationActions(props) {
   const theme = useTheme();

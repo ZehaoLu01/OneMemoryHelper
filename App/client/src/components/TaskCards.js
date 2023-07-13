@@ -45,10 +45,6 @@ const NoteTitle = styled(Link)(({ theme }) => ({
 }));
 
 export default function TaskCards(notes) {
-  // title: note.title,
-  // section: note.parentSectionTitle,
-  // clientUrl: note.clientUrl,
-  // stage: reviewStage,
   const [tasks, setTasks] = useState([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
