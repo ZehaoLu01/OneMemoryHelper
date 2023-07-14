@@ -1,9 +1,9 @@
 const express = require("express");
-const router = express.Router();
-
 var taskService = require("../services/task");
 
-router.use("/allTasks", async (req, res, next) => {
+const router = express.Router();
+
+router.use("/allTasksToday", async (req, res, next) => {
   const userId = req.session.idTokenClaims?.oid;
   if (!userId) {
     res
@@ -12,7 +12,7 @@ router.use("/allTasks", async (req, res, next) => {
     return;
   }
 
-  const result = await taskService.findAllTasks(userId);
+  const result = await taskService.findAllTasksToday(userId);
   res.json(result);
 });
 

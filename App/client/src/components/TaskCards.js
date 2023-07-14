@@ -83,7 +83,7 @@ export default function TaskCards(notes) {
   // maybe should change the dep
   useEffect(() => {
     async function fetchTasks() {
-      const res = await axios.get("/api/tasks/allTasks");
+      const res = await axios.get("/api/tasks/allTasksToday");
       setTasks(res.data);
     }
     fetchTasks();

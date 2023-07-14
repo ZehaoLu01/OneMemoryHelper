@@ -93,13 +93,14 @@ noteData.upsert = async (notes, ownerId) => {
       const convertedNote = {};
       convertedNote.id = note.id;
       convertedNote.title = note.title;
-      convertedNote.createdDateTime = note.createdDateTime;
-      convertedNote.lastModifiedDateTime = note.lastModifiedDateTime;
+      convertedNote.createdDateTime = new Date(note.createdDateTime);
+      convertedNote.lastModifiedDateTime = new Date(note.lastModifiedDateTime);
       convertedNote.clientUrl = note.links.oneNoteClientUrl.href;
       convertedNote.webUrl = note.links.oneNoteWebUrl.href;
       convertedNote.parentSectionId = note.parentSection.id;
       convertedNote.parentSectionTitle = note.parentSection.displayName;
       convertedNote.ownerId = ownerId;
+      convertedNote.nextReviewTime = new Date();
       return convertedNote;
     });
     await checkConnection();
@@ -129,6 +130,26 @@ noteData.getNotesOfStage = async (oid, min, max) => {
     const result = await noteModel.find({
       ownerId: oid,
       reviewStage: { $gte: min, $lte: max },
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+noteData.getNotesOfStageNeedReviewToday = async (oid, min, max) => {
+  try {
+    const todayMidnightDateTime = new Date();
+    todayMidnightDateTime.setHours(0, 0, 0, 0);
+    const tomorrowMidnightDateTime = new Date();
+    tomorrowMidnightDateTime.setHours(23, 59, 59, 999);
+    const result = await noteModel.find({
+      ownerId: oid,
+      reviewStage: { $gte: min, $lte: max },
+      nextReviewTime: {
+        $gte: todayMidnightDateTime,
+        $lte: tomorrowMidnightDateTime,
+      },
     });
     return result;
   } catch (err) {

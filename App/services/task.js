@@ -1,10 +1,16 @@
 const noteData = require("../models/notes");
+const config = require("../config");
 
 const taskService = {};
 
-taskService.findAllTasks = async (userId) => {
+//Task is defined as note that need review on some day.
+taskService.findAllTasksToday = async (userId) => {
   try {
-    const noteResult = await noteData.getNotesOfStage(userId, 1, 4);
+    const noteResult = await noteData.getNotesOfStageNeedReviewToday(
+      userId,
+      config.ReviewStage.First,
+      config.ReviewStage.Forth
+    );
     const result = noteResult.map((note) => {
       return {
         id: note.id,
