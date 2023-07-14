@@ -190,7 +190,7 @@ function AddNoteButton(props) {
   const handleAddButtonClick = useCallback(async () => {
     if (props.id) {
       props.setNotes(props.notes.filter((note) => note.id !== props.id));
-      const result = await axios.put("/api/notes/setReviewStage", {
+      const result = await axios.put("/api/notes/ReviewStage", {
         id: props.id,
         stage: ReviewStage.First,
       });

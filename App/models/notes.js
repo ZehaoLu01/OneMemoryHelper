@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const config = require("../config");
 
 const checkConnection = async () => {
   if (mongoose.connection.readyState != 1) {
@@ -49,8 +50,9 @@ const noteScheme = mongoose.Schema({
   },
   lastReviewTime: {
     type: Date,
-    required: true,
-    default: Date.now(),
+  },
+  nextReviewTime: {
+    type: Date,
   },
 });
 
@@ -102,7 +104,7 @@ noteData.upsert = async (notes, ownerId) => {
     });
     await checkConnection();
     for (const note of convertedNotes) {
-      noteModel.updateOne({ id: note.id }, note, { upsert: true });
+      await noteModel.updateOne({ id: note.id }, note, { upsert: true });
     }
     return convertedNotes;
   } catch (err) {
@@ -128,6 +130,51 @@ noteData.getNotesOfStage = async (oid, min, max) => {
       ownerId: oid,
       reviewStage: { $gte: min, $lte: max },
     });
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+noteData.getNoteReviewStage = async (noteId) => {
+  try {
+    const result = await noteModel.findOne({ id: noteId }, ["reviewStage"]);
+    if (result) {
+      return result.reviewStage;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+noteData.updateReviewTime = async (noteId, currentStage) => {
+  try {
+    if (
+      currentStage == config.ReviewStage.NotForReview ||
+      currentStage - 1 > config.reviewInterval.length
+    ) {
+      return;
+    }
+
+    var nextDate = new Date(
+      new Date().getTime() +
+        config.reviewInterval[config.getIntervalForStage(currentStage)] *
+          24 *
+          60 *
+          60 *
+          1000
+    );
+
+    const result = await noteModel.updateOne(
+      { id: noteId },
+      {
+        lastReviewTime: Date.now(),
+        nextReviewTime: nextDate,
+      }
+    );
+
     return result;
   } catch (err) {
     console.log(err);

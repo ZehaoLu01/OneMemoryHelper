@@ -11,4 +11,11 @@ config.ReviewStage = {
 
 config.reviewInterval = [1, 2, 4];
 
+config.getIntervalForStage = (stage) => {
+  try {
+    return this.reviewInterval[stage - 1];
+  } catch (e) {
+    return 0;
+  }
+};
 module.exports = config;

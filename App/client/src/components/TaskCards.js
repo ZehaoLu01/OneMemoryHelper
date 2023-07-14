@@ -60,20 +60,22 @@ export default function TaskCards(notes) {
     setOpenNoteId("");
   }, []);
 
-  const handleCompleteTask = async (id, currentStage) => {
+  const handleCompleteStage = async (id, currentStage) => {
     handleMoreVertClose();
-    await axios.put("/api/notes/setReviewStage", {
+    await axios.put("/api/notes/ReviewStage", {
       id: id,
       stage: currentStage + 1,
+      updateReviewStageToNow: true,
     });
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
   const handleIgnoreNote = async (id) => {
     handleMoreVertClose();
-    await axios.put("/api/notes/setReviewStage", {
+    await axios.put("/api/notes/ReviewStage", {
       id: id,
       stage: ReviewStage.Completed,
+      updateReviewStageToNow: false,
     });
     setTasks(tasks.filter((task) => task.id !== id));
   };
@@ -126,7 +128,7 @@ export default function TaskCards(notes) {
               >
                 <MenuItemWrapped
                   id={task.id}
-                  handler={handleCompleteTask}
+                  handler={handleCompleteStage}
                   stage={task.stage}
                 >
                   Completed
