@@ -4,7 +4,7 @@ var axios = require("axios");
 var userServices = require("../services/user");
 var noteServices = require("../services/note");
 
-router.use("/recentlyModified", async function (req, res, next) {
+router.use("/recentlyModifiedNotes", async function (req, res, next) {
   const isTesting = true;
 
   try {

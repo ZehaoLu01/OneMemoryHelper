@@ -67,7 +67,7 @@ export default function Home() {
   // maybe should change the dependency list.
   useEffect(() => {
     axios
-      .get("/api/notes/recentlyModified", {
+      .get("/api/notes/recentlyModifiedNotes", {
         params: { lastModifiedDateTime: queryDateString },
       })
       .then((res) => {
