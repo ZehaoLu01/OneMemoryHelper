@@ -4,7 +4,7 @@ var userServices = require("../services/user");
 var noteServices = require("../services/note");
 
 // *We don't want to return notes that is modified during reviewing here.
-// *Only notes that is not currently being reviewed and is modified since last user update will be returned here.
+// *Only notes that are not currently being reviewed and is modified since last user update will be returned here.
 router.use("/recentlyModifiedNotes", async function (req, res, next) {
   const isTesting = true;
 
@@ -13,7 +13,6 @@ router.use("/recentlyModifiedNotes", async function (req, res, next) {
       const userId = req.session.idTokenClaims.oid;
       const userData = (await userServices.getUserDataById(userId))[0];
 
-      //==============================
       let showingData = await noteServices.getNotesForFrontendAndUpdate(
         userData,
         isTesting,

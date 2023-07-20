@@ -58,9 +58,9 @@ noteServices.getNotesForFrontendAndUpdate = async function (
   req
 ) {
   const lastUpdateTime = new Date(userData.lastUpdateTime);
-  let requestURL = `https://graph.microsoft.com/v1.0/me/onenote/pages?$filter=lastModifiedDateTime ge ${
+  let requestURL = `https://graph.microsoft.com/v1.0/me/onenote/pages?$top=100&$filter=lastModifiedDateTime ge ${
     isTesting ? req.query.lastModifiedDateTime : lastUpdateTime.toISOString()
-  }`;
+  }&$orderby=lastModifiedDateTime desc`;
   let fetchedNotes = [];
 
   while (requestURL !== undefined) {
