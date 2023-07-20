@@ -32,4 +32,24 @@ noteServices.setReviewStage = async (
   }
 };
 
+noteServices.filterFetchedNotes = async (noteIds) => {
+  try {
+    const notes = await noteData.getNotesOfIds(noteIds);
+    return notes.filter((note) => {
+      console.log(note.title);
+      console.log(Date.now());
+      console.log(note.lastModifiedDateTime.getTime());
+
+      return (
+        (note.reviewStage === config.ReviewStage.NotForReview ||
+          note.reviewStage === config.ReviewStage.Completed) &&
+        Date.now() - note.lastModifiedDateTime.getTime() <=
+          config.modifiedNotesShowingPeriod * 60 * 60 * 24 * 1000
+      );
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = noteServices;

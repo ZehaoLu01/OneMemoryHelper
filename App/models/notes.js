@@ -202,4 +202,10 @@ noteData.updateReviewTime = async (noteId, currentStage) => {
   }
 };
 
+noteData.getNotesOfIds = async (noteIds) => {
+  await checkConnection();
+  const notes = await noteModel.find({ id: { $in: noteIds } });
+  return notes;
+};
+
 module.exports = noteData;

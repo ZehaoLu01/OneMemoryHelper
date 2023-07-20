@@ -11,6 +11,8 @@ config.ReviewStage = {
 
 config.reviewInterval = [1, 2, 4];
 
+config.modifiedNotesShowingPeriod = 10;
+
 config.getIntervalForStage = (stage) => {
   try {
     return this.reviewInterval[stage - 1];
