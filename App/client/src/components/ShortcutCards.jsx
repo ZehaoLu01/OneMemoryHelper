@@ -1,6 +1,7 @@
-﻿import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
+﻿import { Box, Card, Grid, Icon, IconButton, styled, Menu, MenuItem, Link } from '@mui/material';
 import clsx from 'clsx';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { useState } from 'react';
 
 const StyledBox = styled(Box)(({ theme, textTransformStyle, ellipsis }) => ({
   textTransform: textTransformStyle || 'none',
@@ -43,7 +44,7 @@ const ContentBox = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
     alignItems: 'center',
     '& small': { color: theme.palette.text.secondary },
-    '& .icon': { opacity: 0.6, fontSize: '44px', color: theme.palette.primary.main },
+    '& .icon': { opacity: 0.6},
 }));
 
 const Heading = styled('h6')(({ theme }) => ({
@@ -56,31 +57,58 @@ const Heading = styled('h6')(({ theme }) => ({
 
 
 export default function ShortcutCards({ name,url }) {
-    let iconUrl = url + '/favicon.ico';
-    const cardList = [
-        { name: 'Google', amount: "https://www.google.com", icon: 'group' },
-        { name: 'This week Sales', amount: "https://www.google.com", icon: 'attach_money' },
-        { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store' },
-        { name: 'Orders to deliver', amount: '305 Orders', icon: 'shopping_cart' },
-        { name: 'Google', amount: "https://www.google.com", icon: 'group' },
-        { name: 'This week Sales', amount: '$80,500', icon: 'attach_money' },
-    ];
+    const iconUrlPrefix = 'https://www.google.com/s2/favicons?sz=32&domain_url=';
+    // TODO
+    // the url here is without www. If the user input sth with www, then the link will not work.
+    // Maybe we need to prim the input string! Or we should use url with www.
+    const [cards,setCards] = useState([
+        { name: 'Google', url: "google.com"},
+        { name: 'Microsoft', url: "microsoft.com"},
+        { name: 'Google map', url: 'google.com/maps'},
+        { name: 'Google Calendar', url: "calendar.google.com"},
+        { name: 'StackOverflow', url: 'stackoverflow.com'},
+        { name: 'Amazon', url: 'amazon.ca'},
+    ]);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {;
+        setAnchorEl(event.currentTarget);
+      };
+      const handleClose = () => {
+        setAnchorEl(null);
+      };
     return (
         <Grid container direction="row" spacing={3} sx={{ mb:"1rem"}}>
-            {cardList.map((item, index) => (
+            {cards.map((item, index) => (
                 <Grid item xs={12} md={4} key={index}>
                     <StyledCard elevation={6}>
                         <ContentBox>
-                            <Icon className="icon">{item.icon}</Icon>
+                            <IconButton >
+                                <Icon className="icon" sx={{width:"48px",height:"48px"}}>
+                                    <img alt="icon" src={iconUrlPrefix + item.url}></img>
+                                </Icon>
+                            </IconButton>
                             <Box ml="12px">
                                 <Small>{item.name}</Small>
-                                <Heading>{item.amount}</Heading>
+                                <Heading><Link href={"https://www."+item.url}>{item.url}</Link></Heading>
                             </Box>
                         </ContentBox>
 
-                        <Tooltip title="edit" placement="top">
-                            <ModeEditIcon></ModeEditIcon>
-                        </Tooltip>
+                        <IconButton onClick={handleClick}>
+                            <ModeEditIcon/>
+                        </IconButton>
+                        <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                    }}
+                                >
+                                    <MenuItem onClick={handleClose}>Edit</MenuItem>
+                                    <MenuItem onClick={handleClose}>Delete</MenuItem>
+                        </Menu>
                     </StyledCard>
                 </Grid>
             ))}
