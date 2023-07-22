@@ -15,6 +15,7 @@ import LinearWithValueLabel from "./components/LinearWithValueLabel";
 import { authorizationContext } from "./context";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import NoRecentNoteComponent from "./components/NoRecentNoteComponent";
 
 const theme = createTheme({
   palette: {
@@ -42,6 +43,7 @@ const testingStyle = {
 export default function Home() {
   const [authState, setAuthState] = useState({ isAuthorized: false });
   const [notes, setNotes] = useState([]);
+  const [isFetchNoteInProgress, setIsFetchNoteInProgress] = useState(false);
 
   useEffect(() => {
     async function checkAuth() {
@@ -66,16 +68,21 @@ export default function Home() {
 
   // maybe should change the dependency list.
   useEffect(() => {
+    setIsFetchNoteInProgress(true);
     axios
       .get("/api/notes/recentlyModifiedNotes", {
         params: { lastModifiedDateTime: queryDateString },
       })
       .then((res) => {
+        setIsFetchNoteInProgress(false);
+
         if (res.data?.value !== undefined) {
           setNotes(res.data.value);
         }
       })
       .catch((err) => {
+        setIsFetchNoteInProgress(false);
+
         console.log(err);
       });
   }, [authContext.isAuthorized]);
@@ -100,7 +107,14 @@ export default function Home() {
                   sx={{ ...testingStyle }}
                   elevation={3}
                 >
-                  <NewNotesComp notes={notes} setNotes={setNotes} />
+                  {notes.length === 0 ? (
+                    <NoRecentNoteComponent
+                      isRequestInProgress={isFetchNoteInProgress}
+                    ></NoRecentNoteComponent>
+                  ) : (
+                    <NewNotesComp notes={notes} setNotes={setNotes} />
+                  )}
+                  {/* <NewNotesComp notes={notes} setNotes={setNotes} /> */}
                 </Paper>
               </Grid>
               <Grid item xs>
