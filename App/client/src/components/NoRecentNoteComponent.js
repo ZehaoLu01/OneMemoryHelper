@@ -2,6 +2,7 @@ import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { ReactComponent as NoNoteImg } from "../resources/NoNote.svg";
 import { useContext } from "react";
 import { authorizationContext } from "../context";
+import axios from "axios";
 
 export default function NoRecentNoteComponent({ isRequestInProgress = false }) {
   const authContext = useContext(authorizationContext);
@@ -45,14 +46,21 @@ function AuthorizedButNoNoteText() {
       alignItems="center"
     >
       <Typography variant="h5" gutterBottom>
-        Please sign in!
+        No note is found!
       </Typography>
-      <Button variant="contained">Sign in</Button>
     </Box>
   );
 }
 
 function NotAuthorizedTextAndButton() {
+  const handleSignin = async () => {
+    try {
+      const res = await axios.get("/api/auth/signin");
+      window.location.href = res.request.responseURL;
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <Box
       display="flex"
@@ -63,7 +71,9 @@ function NotAuthorizedTextAndButton() {
       <Typography variant="h5" gutterBottom>
         Please sign in!
       </Typography>
-      <Button variant="contained">Sign in</Button>
+      <Button variant="contained" onClick={handleSignin}>
+        Sign in
+      </Button>
     </Box>
   );
 }
