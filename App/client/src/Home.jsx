@@ -72,7 +72,7 @@ export default function Home() {
   useEffect(() => {
     setIsFetchNoteInProgress(true);
     axios
-      .get("/api/notes/recentlyModifiedNotes", {
+      .get("/api/notes/recentlyModified", {
         params: { lastModifiedDateTime: queryDateString },
       })
       .then((res) => {

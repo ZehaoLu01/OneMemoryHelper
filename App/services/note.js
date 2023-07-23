@@ -36,10 +36,6 @@ noteServices.filterFetchedNotes = async (noteIds) => {
   try {
     const notes = await noteData.getNotesOfIds(noteIds);
     return notes.filter((note) => {
-      console.log(note.title);
-      console.log(Date.now());
-      console.log(note.lastModifiedDateTime.getTime());
-
       return (
         (note.reviewStage === config.ReviewStage.NotForReview ||
           note.reviewStage === config.ReviewStage.Completed) &&
