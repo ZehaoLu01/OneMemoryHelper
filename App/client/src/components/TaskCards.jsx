@@ -2,7 +2,6 @@
   Box,
   Card,
   Grid,
-  Icon,
   IconButton,
   styled,
   Menu,
@@ -10,6 +9,7 @@
   Link,
 } from "@mui/material";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ListIcon from '@mui/icons-material/List';
 import axios from "axios";
 import { useCallback, useEffect, useState, useContext } from "react";
 import { authorizationContext } from "../context";
@@ -143,7 +143,7 @@ export default function TaskCards({notes,tasks,setTasks,completedNum,setComplete
                       handleMoreVertClick(e, task.id);
                     }}
                   >
-                    <Icon>more_vert</Icon>
+                    <ListIcon/>
                   </IconButton>
 
                   <Menu
