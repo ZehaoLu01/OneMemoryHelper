@@ -130,7 +130,7 @@ export default function Home() {
                 >
                   <Container>
                     <Box sx={{ mt: "8px", mb: "8px" }}>
-                      <LinearWithValueLabel value={completedTasksNum/tasks.length*100}></LinearWithValueLabel>
+                      <LinearWithValueLabel value={tasks.length===0?0:completedTasksNum/tasks.length*100}></LinearWithValueLabel>
                     </Box>
                     <TaskCards notes={notes} tasks={tasks} setTasks={setTasks} completedNum={completedTasksNum} setCompleteNum={setCompleteTasksNum}/>
                   </Container>
