@@ -74,8 +74,31 @@ export default function TaskCards({notes,tasks,setTasks,completedNum,setComplete
   // maybe should change the dep
   useEffect(() => {
     async function fetchTasks() {
-      const res = await axios.get("/api/tasks/allTasksToday");
-      setTasks(res.data);
+      try{
+        const res = await axios.get("/api/tasks/today");
+        setTasks(res.data);
+      }
+      catch(error){
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          if(error.response.status===401){
+            console.log("Not authorized! Please log in.")
+          }
+          console.log(error.response.data);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+      }
+
     }
     fetchTasks();
   }, [authContext.isAuthorized, notes]);

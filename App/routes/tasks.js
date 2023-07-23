@@ -3,11 +3,11 @@ var taskService = require("../services/task");
 
 const router = express.Router();
 
-router.use("/allTasksToday", async (req, res, next) => {
+router.use("/today", async (req, res, next) => {
   const userId = req.session.idTokenClaims?.oid;
   if (!userId) {
     res
-      .status(500)
+      .status(401)
       .json({ reason: "failed to find the user oid from session." });
     return;
   }
