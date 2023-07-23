@@ -127,7 +127,7 @@ export default function ShortcutCards({ name,url }) {
                 <Grid item xs={12} md={4} key={index}>
                     <StyledCard elevation={6}>
                         <ContentBox>
-                            <IconButton >
+                            <IconButton href={"https://www."+item.url}>
                                 <Icon className="icon" sx={{width:"48px",height:"48px"}}>
                                     <img alt="icon" src={iconUrlPrefix + item.url}></img>
                                 </Icon>
