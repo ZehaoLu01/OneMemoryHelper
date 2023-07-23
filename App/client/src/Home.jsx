@@ -44,6 +44,8 @@ export default function Home() {
   const [authState, setAuthState] = useState({ isAuthorized: false });
   const [notes, setNotes] = useState([]);
   const [isFetchNoteInProgress, setIsFetchNoteInProgress] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [completedTasksNum,setCompleteTasksNum] =useState(0);
 
   useEffect(() => {
     async function checkAuth() {
@@ -128,9 +130,9 @@ export default function Home() {
                 >
                   <Container>
                     <Box sx={{ mt: "8px", mb: "8px" }}>
-                      <LinearWithValueLabel></LinearWithValueLabel>
+                      <LinearWithValueLabel value={completedTasksNum/tasks.length*100}></LinearWithValueLabel>
                     </Box>
-                    <TaskCards notes={notes} />
+                    <TaskCards notes={notes} tasks={tasks} setTasks={setTasks} completedNum={completedTasksNum} setCompleteNum={setCompleteTasksNum}/>
                   </Container>
                 </Paper>
               </Grid>

@@ -9,6 +9,7 @@
   MenuItem,
   Link,
 } from "@mui/material";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import axios from "axios";
 import { useCallback, useEffect, useState, useContext } from "react";
 import { authorizationContext } from "../context";
@@ -21,8 +22,7 @@ const NoteTitle = styled(Link)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: { marginLeft: 4 },
 }));
 
-export default function TaskCards(notes) {
-  const [tasks, setTasks] = useState([]);
+export default function TaskCards({notes,tasks,setTasks,completedNum,setCompleteNum}) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openNoteId, setOpenNoteId] = useState("");
@@ -39,17 +39,31 @@ export default function TaskCards(notes) {
 
   const handleCompleteStage = async (id, currentStage) => {
     handleMoreVertClose();
-    await axios.put("/api/notes/ReviewStage", {
+
+    //TODO
+    //Add error handling
+    axios.put("/api/notes/ReviewStage", {
       id: id,
       stage: currentStage + 1,
       updateReviewStageToNow: true,
     });
-    setTasks(tasks.filter((task) => task.id !== id));
+    setCompleteNum(completedNum+1);
+    setTasks(tasks.map((task) => {
+      if(task.id==id){
+        return {...task,completed:true};
+      }
+      else{
+        return task;
+      }
+    }));
   };
 
   const handleIgnoreNote = async (id) => {
     handleMoreVertClose();
-    await axios.put("/api/notes/ReviewStage", {
+    
+    //TODO
+    //Add error handling
+    axios.put("/api/notes/ReviewStage", {
       id: id,
       stage: ReviewStage.Completed,
       updateReviewStageToNow: false,
@@ -66,62 +80,78 @@ export default function TaskCards(notes) {
     fetchTasks();
   }, [authContext.isAuthorized, notes]);
 
-  return tasks.map((task) => (
-    <Box>
-      <Card sx={{ py: 1, px: 2 }} className="project-card" elevation={3}>
-        <Grid container alignItems="center">
-          <Grid item md={8} xs={7}>
-            <Box display="flex" alignItems="center">
-              <NoteTitle
-                component="button"
-                href={task.clientUrl ? task.clientUrl : task.webUrl}
-              >
-                {task.title}
-              </NoteTitle>
-            </Box>
-          </Grid>
+  return tasks.map((task) => {
+    if(task.completed===true){
+      return(
+        <Box>
+        <Card sx={{ py: 1, px: 2 }} elevation={3}>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <CheckCircleOutlineIcon fontSize="large"/>
+          </Box>
+        </Card>
+        <Box py={1} />
+      </Box>
+      ) 
+    }
+    else{
+      return (
+          <Box>
+          <Card sx={{ py: 1, px: 2 }} className="project-card" elevation={3}>
+            <Grid container alignItems="center">
+              <Grid item md={8} xs={7}>
+                <Box display="flex" alignItems="center">
+                  <NoteTitle
+                    component="button"
+                    href={task.clientUrl ? task.clientUrl : task.webUrl}
+                  >
+                    {task.title}
+                  </NoteTitle>
+                </Box>
+              </Grid>
 
-          <Grid item md={3} xs={4}>
-            <Box> {task.section} </Box>
-          </Grid>
+              <Grid item md={3} xs={4}>
+                <Box> {task.section} </Box>
+              </Grid>
 
-          <Grid item xs={1}>
-            <Box display="flex" justifyContent="flex-end">
-              <IconButton
-                onClick={(e) => {
-                  handleMoreVertClick(e, task.id);
-                }}
-              >
-                <Icon>more_vert</Icon>
-              </IconButton>
+              <Grid item xs={1}>
+                <Box display="flex" justifyContent="flex-end">
+                  <IconButton
+                    onClick={(e) => {
+                      handleMoreVertClick(e, task.id);
+                    }}
+                  >
+                    <Icon>more_vert</Icon>
+                  </IconButton>
 
-              <Menu
-                anchorEl={anchorEl}
-                open={openNoteId === task.id}
-                onClose={handleMoreVertClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItemWrapped
-                  id={task.id}
-                  handler={handleCompleteStage}
-                  stage={task.stage}
-                >
-                  Completed
-                </MenuItemWrapped>
-                <MenuItemWrapped id={task.id} handler={handleIgnoreNote}>
-                  Ignore
-                </MenuItemWrapped>
-                <MenuItem onClick={handleMoreVertClose}>3</MenuItem>
-              </Menu>
-            </Box>
-          </Grid>
-        </Grid>
-      </Card>
-      <Box py={1} />
-    </Box>
-  ));
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={openNoteId === task.id}
+                    onClose={handleMoreVertClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    <MenuItemWrapped
+                      id={task.id}
+                      handler={handleCompleteStage}
+                      stage={task.stage}
+                    >
+                      Completed
+                    </MenuItemWrapped>
+                    <MenuItemWrapped id={task.id} handler={handleIgnoreNote}>
+                      Ignore
+                    </MenuItemWrapped>
+                    <MenuItem onClick={handleMoreVertClose}>3</MenuItem>
+                  </Menu>
+                </Box>
+              </Grid>
+            </Grid>
+          </Card>
+          <Box py={1} />
+        </Box>
+      )
+    }
+  });
 }
 
 function MenuItemWrapped({ id, handler, children, stage }) {
