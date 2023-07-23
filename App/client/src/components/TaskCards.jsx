@@ -5,7 +5,6 @@
   Icon,
   IconButton,
   styled,
-  useTheme,
   Menu,
   MenuItem,
   Link,
@@ -14,28 +13,6 @@ import axios from "axios";
 import { useCallback, useEffect, useState, useContext } from "react";
 import { authorizationContext } from "../context";
 import { ReviewStage } from "../noteReviewStage";
-
-const StyledBox = styled(Box)(({ theme, textTransformStyle, ellipsis }) => ({
-  textTransform: textTransformStyle || "none",
-  whiteSpace: ellipsis ? "nowrap" : "normal",
-  overflow: ellipsis ? "hidden" : "",
-  textOverflow: ellipsis ? "ellipsis" : "",
-}));
-
-const Span = ({ children, className, ellipsis, textTransform, ...props }) => {
-  return (
-    <StyledBox
-      textTransformStyle={textTransform}
-      ellipsis={ellipsis}
-      className={className}
-      component="span"
-      lineHeight="1.5"
-      {...props}
-    >
-      {children}
-    </StyledBox>
-  );
-};
 
 const NoteTitle = styled(Link)(({ theme }) => ({
   marginLeft: 24,
