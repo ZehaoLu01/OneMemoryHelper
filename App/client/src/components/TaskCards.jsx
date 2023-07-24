@@ -58,6 +58,11 @@ export default function TaskCards({notes,tasks,setTasks,completedNum,setComplete
     }));
   };
 
+  const handleClickTitle = (id, currentStage, url)=>{
+    handleCompleteStage(id,currentStage);
+    window.location.href = url;
+  }
+
   const handleIgnoreNote = async (id) => {
     handleMoreVertClose();
     
@@ -123,12 +128,10 @@ export default function TaskCards({notes,tasks,setTasks,completedNum,setComplete
             <Grid container alignItems="center">
               <Grid item md={8} xs={7}>
                 <Box display="flex" alignItems="center">
-                  <NoteTitle
-                    component="button"
-                    href={task.clientUrl ? task.clientUrl : task.webUrl}
-                  >
+                  <TaskTitleWrapped id={task.id} stage={task.stage} handler={handleClickTitle} clientUrl={task.clientUrl} webUrl
+                  ={task.webUrl}>
                     {task.title}
-                  </NoteTitle>
+                  </TaskTitleWrapped>
                 </Box>
               </Grid>
 
@@ -164,7 +167,6 @@ export default function TaskCards({notes,tasks,setTasks,completedNum,setComplete
                     <MenuItemWrapped id={task.id} handler={handleIgnoreNote}>
                       Ignore
                     </MenuItemWrapped>
-                    <MenuItem onClick={handleMoreVertClose}>3</MenuItem>
                   </Menu>
                 </Box>
               </Grid>
@@ -175,6 +177,19 @@ export default function TaskCards({notes,tasks,setTasks,completedNum,setComplete
       )
     }
   });
+}
+
+function TaskTitleWrapped({id,handler,children,stage, clientUrl, webUrl}){
+  return(
+    <NoteTitle
+    component="button"
+    onClick={()=>{
+      handler(id, stage, clientUrl?clientUrl:webUrl);
+    }}
+  >
+    {children}
+  </NoteTitle>
+  )
 }
 
 function MenuItemWrapped({ id, handler, children, stage }) {
