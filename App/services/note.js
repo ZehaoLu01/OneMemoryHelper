@@ -37,8 +37,7 @@ noteServices.filterFetchedNotes = async (noteIds) => {
     const notes = await noteData.getNotesOfIds(noteIds);
     return notes.filter((note) => {
       return (
-        (note.reviewStage === config.ReviewStage.NotForReview ||
-          note.reviewStage === config.ReviewStage.Completed) &&
+        note.reviewStage === config.ReviewStage.NotForReview &&
         Date.now() - note.lastModifiedDateTime.getTime() <=
           config.modifiedNotesShowingPeriod * 60 * 60 * 24 * 1000
       );
@@ -82,7 +81,7 @@ noteServices.getNotesForFrontendAndUpdate = async function (
     );
   }
 
-  // We don't want to show notes that is being reviewed, so we need to get rid of those currently getting reviewed.
+  // We don't want to show notes that is being reviewed or has been reviewed or ignored.
   // We also want to show these notes for multiple days instead of once.
   showingData = await noteServices.filterFetchedNotes(
     fetchedNotes.map((note) => note.id)
