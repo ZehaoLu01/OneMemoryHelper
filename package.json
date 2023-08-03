@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "server": "node ./App/bin/www",
-    "client": "cd ./App/client && npm run build",
-    "test": "concurrently \"npm run server\" \"npm run client\"",
-    "start" :"npm run server"
+    "client": "cd ./App/client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start" :"npm run server",
+    "heroku-postbuild":"cd App/client && npm install && npm run build"
   },
   "dependencies": {
     "@azure/msal-node": "^1.17.2",
