@@ -3,6 +3,7 @@ const config = require("../config");
 
 const checkConnection = async () => {
   if (mongoose.connection.readyState != 1) {
+    console.log(process.env.MONGODB_URL);
     await mongoose.connect(process.env.MONGODB_URL);
   }
 };
