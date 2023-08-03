@@ -65,16 +65,14 @@ export default function Home() {
   }, []);
 
   // for testing
-  const queryDateString = "2023-05-17";
+  // const queryDateString = "2023-05-17";
   const authContext = useContext(authorizationContext);
 
   // maybe should change the dependency list.
   useEffect(() => {
     setIsFetchNoteInProgress(true);
     axios
-      .get("/api/notes/recentlyModified", {
-        params: { lastModifiedDateTime: queryDateString },
-      })
+      .get("/api/notes/recentlyModified")
       .then((res) => {
         setIsFetchNoteInProgress(false);
 
