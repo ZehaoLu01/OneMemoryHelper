@@ -6,8 +6,8 @@
     "server": "node ./App/bin/www",
     "client": "cd ./App/client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start" :"npm run server",
-    "heroku-postbuild":"cd App/client && npm install && npm run build"
+    "start": "npm run server",
+    "heroku-postbuild": "cd App/client && npm install && npm run build"
   },
   "dependencies": {
     "@azure/msal-node": "^1.17.2",
@@ -20,6 +20,7 @@
     "express-session": "^1.17.3",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "mongodb": "^5.7.0",
     "mongoose": "^7.3.0",
     "morgan": "~1.9.1",
     "msal-node": "^0.0.1-security"
