@@ -65,7 +65,7 @@ export default function Home() {
   }, []);
 
   // for testing
-  const queryDateString = new Date().toISOString().split('T')[0];
+  const queryDateString = new Date(Date.now()-7*24*60*60*1000).toISOString().split('T')[0];
   const authContext = useContext(authorizationContext);
 
   // maybe should change the dependency list.
