@@ -42,6 +42,16 @@ router.use("/auth", authRouter);
 router.use("/notes", notesRouter);
 router.use("/tasks", taskRouter);
 
+if (
+  process.env.NODE_ENV === "staging" ||
+  process.env.NODE_ENV === "production"
+) {
+  app.use(express.static(path.join(__dirname, "client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client/build/index.html"));
+  });
+}
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

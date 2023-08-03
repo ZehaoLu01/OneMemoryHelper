@@ -5,7 +5,8 @@
   "scripts": {
     "server": "node ./App/bin/www",
     "client": "cd ./App/client && npm run build",
-    "start": "concurrently \"npm run server\" \"npm run client\""
+    "test": "concurrently \"npm run server\" \"npm run client\"",
+    "start" :"npm run server"
   },
   "dependencies": {
     "@azure/msal-node": "^1.17.2",
