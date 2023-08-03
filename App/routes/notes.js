@@ -6,7 +6,7 @@ var noteServices = require("../services/note");
 // *We don't want to return notes that is modified during reviewing here.
 // *Only notes that are not currently being reviewed and is modified since last user update will be returned here.
 router.use("/recentlyModified", async function (req, res, next) {
-  const isTesting = true;
+  const isTesting = false;
 
   try {
     if (req.session.isAuthorized === true) {
